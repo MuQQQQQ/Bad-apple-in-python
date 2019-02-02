@@ -1,0 +1,40 @@
+import cv2
+import os
+import time
+import pickle
+import tkinter 
+
+path = "E:/BadApple/"                                                                                   #图片文件夹地址
+lrc_path = "E:/BadApple/bad apple.lrc"                                                                  #歌词文件地址
+with open(path + '0.dat', 'rb') as fp:
+    strings = pickle.load(fp)                                                                           #strings列表每一个元素表示一帧
+lrc_time = []                                                                                           #歌词时间轴
+lrc = []                                                                                                #歌词文本列表
+with open(lrc_path,"r") as fp:                                                                          #歌词文件文本实例：    28.72 流れてく
+    for each in fp.readlines():
+        sec, line = each.split()
+        lrc_time.append(float(sec))
+        lrc.append(line)
+window = tkinter.Tk()                                                                                   #使用tkinter比命令行输出要快，参考https://github.com/cr19941016/BadApple_PythonTest
+window.title('双倍快乐的Bad Apple') 
+window.geometry('1500x720') 
+player = tkinter.Label(window, font=('Verdana 10 bold', 8))                                             #字符画显示
+lrcPlayer = tkinter.Label(window, anchor = 'center', font = ('魚石行書', 30))                           #歌词显示，字体来源网络
+player.place(x = 10,y = 50)
+lrcPlayer.place(x = 10, y = 625)
+count = 1                                                                                               #计数当前播放帧数
+index = 0                                                                                               #记忆歌词播放位置
+lrc_len = len(lrc)
+time.sleep(3)
+start_t = time.time()
+for each in strings:
+    t = 1/30 * count - time.time() + start_t                                                            #1/30*count表示视频实际播放该帧时间
+    if t>0:                                                                                             #t为运行时间与视频时间播放时间的偏移量
+        time.sleep(t)
+    player['text'] = each
+    if index < lrc_len and count * 1/30 > lrc_time[index]:                                              #满足时间轴则更新歌词
+        lrcPlayer['text'] = lrc[index]
+        index += 1
+    window.update()
+    count += 1
+window.mainloop()
