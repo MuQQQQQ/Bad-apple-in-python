@@ -9,4 +9,4 @@ It covers 3 files:
 3.Player:
   Player in a Tk's Label, as the print speed faster than cmd. The lrc is revised, making the time is a float number and divided with a space.
   
-（草，我英语真垃圾）
+（我英语真垃圾）
